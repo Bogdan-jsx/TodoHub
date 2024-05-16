@@ -1,0 +1,29 @@
+import {NavigationContainer} from '@react-navigation/native';
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import AddTaskScreen from 'src/screens/AddTaskScreen';
+import TaskDetailsScreen from 'src/screens/TaskDetailsScreen';
+import SettingsScreen from 'src/screens/SettingsScreen';
+import TabsStack from './TabsStack';
+import {navigationRef} from './navigation';
+
+const Stack = createNativeStackNavigator();
+
+const Navigation = () => {
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Tabs"
+          component={TabsStack}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
+        <Stack.Screen name="TaskDetailsScreen" component={TaskDetailsScreen} />
+        <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default Navigation;
