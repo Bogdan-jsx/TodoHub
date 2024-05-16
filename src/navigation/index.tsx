@@ -12,12 +12,8 @@ const Stack = createNativeStackNavigator();
 const Navigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Tabs"
-          component={TabsStack}
-          options={{headerShown: false}}
-        />
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Tabs" component={TabsStack} />
         <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
         <Stack.Screen name="TaskDetailsScreen" component={TaskDetailsScreen} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />

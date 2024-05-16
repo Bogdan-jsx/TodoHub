@@ -1,18 +1,46 @@
 import React from 'react';
-import {Button, Text, View} from 'react-native';
-import {navigate} from 'src/navigation/navigation';
+import {SafeAreaView, ScrollView} from 'react-native';
+import {Divider, List, useTheme} from 'react-native-paper';
+import {HeaderBar} from 'src/components/HeaderBar';
+import TaskItem from 'src/components/TaskItem';
 
 const HomeScreen = () => {
+  const theme = useTheme();
   return (
-    <View>
-      <Text>HomeScreen</Text>
-      <Button title="To Add task" onPress={() => navigate('AddTaskScreen')} />
-      <Button
-        title="To Task details"
-        onPress={() => navigate('TaskDetailsScreen')}
-      />
-      <Button title="To Settings" onPress={() => navigate('SettingsScreen')} />
-    </View>
+    <>
+      <HeaderBar title={'Home'} />
+      <SafeAreaView style={{backgroundColor: theme.colors.background, flex: 1}}>
+        <ScrollView>
+          <List.Section title="Overdue">
+            <Divider />
+            <TaskItem />
+            <Divider />
+            <TaskItem />
+            <Divider />
+            <TaskItem />
+            <Divider />
+          </List.Section>
+          <List.Section title="Due today">
+            <Divider />
+            <TaskItem />
+            <Divider />
+            <TaskItem />
+            <Divider />
+            <TaskItem />
+            <Divider />
+          </List.Section>
+          <List.Section title="Rest">
+            <Divider />
+            <TaskItem />
+            <Divider />
+            <TaskItem />
+            <Divider />
+            <TaskItem />
+            <Divider />
+          </List.Section>
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 

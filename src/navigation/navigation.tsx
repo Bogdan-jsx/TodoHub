@@ -1,4 +1,5 @@
 import {
+  CommonActions,
   StackActions,
   createNavigationContainerRef,
 } from '@react-navigation/native';
@@ -18,4 +19,8 @@ export const replace = (name: ScreenNamesType, params?: object) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(StackActions.replace(name, params));
   }
+};
+
+export const back = () => {
+  navigationRef.current?.dispatch(CommonActions.goBack());
 };
