@@ -1,11 +1,15 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+import {HeaderBar} from 'src/components/HeaderBar';
 
 const HomeScreen = () => {
   return (
-    <View>
-      <Text>SettingsScreen</Text>
-    </View>
+    <>
+      <HeaderBar title="Settings" shouldDisplayBackBtn={true} />
+      <View>
+        <Text>SettingsScreen</Text>
+      </View>
+    </>
   );
 };
 

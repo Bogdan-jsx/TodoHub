@@ -3181,6 +3181,7 @@ __metadata:
     prettier: 2.8.8
     react: 18.2.0
     react-native: 0.74.1
+    react-native-context-menu-view: ^1.16.0
     react-native-paper: ^5.12.3
     react-native-safe-area-context: ^4.10.1
     react-native-screens: ^3.31.1
@@ -4466,9 +4467,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.772
-  resolution: "electron-to-chromium@npm:1.4.772"
-  checksum: 685eb387e896e571efb07927e10e2b8e980214fe4b5daac80c20c9eae881dfd06d2fa3d8a4195b3455fbf0bc268bd472004a07685e07245a5d59aac5a44fb17d
+  version: 1.4.774
+  resolution: "electron-to-chromium@npm:1.4.774"
+  checksum: 5b68ea2583b406e43dc6cea7511a070adddb1da27c29a50ae721851b4b1f4a54412933a9f1d2d62c35f0bfa5bb56735a1793f4387ea4d3470d59502f5084bff1
   languageName: node
   linkType: hard
 
@@ -8334,7 +8335,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-paper@npm:^5.12.3":
+"react-native-context-menu-view@npm:^1.16.0":
+  version: 1.16.0
+  resolution: "react-native-context-menu-view@npm:1.16.0"
+  peerDependencies:
+    react: ^16.8.1 || ^17.0.0 || ^18.0.0
+    react-native: ">=0.60.0-rc.0 <1.0.x"
+  checksum: 4d0c85059de3b085bb43b052706920a7e5cf1ec7c4a0de2247e7aed1345bafc636502724f8ce3467530e35a50feb024d34973a169cdf38a9a2d7e8149d0bed9b
+  languageName: node
+  linkType: hard
+
+"react-native-paper@npm:5.12.3":
   version: 5.12.3
   resolution: "react-native-paper@npm:5.12.3"
   dependencies:
@@ -8347,6 +8358,22 @@ __metadata:
     react-native-safe-area-context: "*"
     react-native-vector-icons: "*"
   checksum: 927a8948d220fb59cb4dae2f12f3b4dc2173b9cd42e38dc74a0f25584a69978555a260c140db973f8401f7fef394dee3ec42c90b6134deeb3aa462291fd0ce5f
+  languageName: node
+  linkType: hard
+
+"react-native-paper@patch:react-native-paper@npm%3A5.12.3#./.yarn/patches/react-native-paper-npm-5.12.3-1a888b7688.patch::locator=TodoHub%40workspace%3A.":
+  version: 5.12.3
+  resolution: "react-native-paper@patch:react-native-paper@npm%3A5.12.3#./.yarn/patches/react-native-paper-npm-5.12.3-1a888b7688.patch::version=5.12.3&hash=969025&locator=TodoHub%40workspace%3A."
+  dependencies:
+    "@callstack/react-theme-provider": ^3.0.9
+    color: ^3.1.2
+    use-latest-callback: ^0.1.5
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-safe-area-context: "*"
+    react-native-vector-icons: "*"
+  checksum: c692a9e71fb5228c554057fb134ae58c60fb37a0d4e149c021d7e17c9c6abb033e253967d754bcbb9b63e648ba5e021db37432e3c05aba4b3248ce2b7e1c94a0
   languageName: node
   linkType: hard
 

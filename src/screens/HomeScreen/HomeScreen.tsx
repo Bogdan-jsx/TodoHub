@@ -1,6 +1,7 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {Divider, List, useTheme} from 'react-native-paper';
+import AddTaskBtn from 'src/components/AddTaskBtn/AddTaskBtn';
 import {HeaderBar} from 'src/components/HeaderBar';
 import TaskItem from 'src/components/TaskItem';
 
@@ -8,8 +9,12 @@ const HomeScreen = () => {
   const theme = useTheme();
   return (
     <>
-      <HeaderBar title={'Home'} />
-      <SafeAreaView style={{backgroundColor: theme.colors.background, flex: 1}}>
+      <HeaderBar title={'Home'} shouldDisplayBackBtn={false} />
+      <SafeAreaView
+        style={{
+          backgroundColor: theme.colors.background,
+          flex: 1,
+        }}>
         <ScrollView>
           <List.Section title="Overdue">
             <Divider />
@@ -29,7 +34,7 @@ const HomeScreen = () => {
             <TaskItem />
             <Divider />
           </List.Section>
-          <List.Section title="Rest">
+          <List.Section title="Rest" style={{marginBottom: 90}}>
             <Divider />
             <TaskItem />
             <Divider />
@@ -39,6 +44,7 @@ const HomeScreen = () => {
             <Divider />
           </List.Section>
         </ScrollView>
+        <AddTaskBtn />
       </SafeAreaView>
     </>
   );

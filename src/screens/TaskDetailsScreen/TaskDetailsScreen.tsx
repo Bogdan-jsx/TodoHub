@@ -1,11 +1,15 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {SafeAreaView, Text} from 'react-native';
+import {HeaderBar} from 'src/components/HeaderBar';
 
 const HomeScreen = () => {
   return (
-    <View>
-      <Text>TaskDetailsScreen</Text>
-    </View>
+    <>
+      <HeaderBar title="Task details" shouldDisplayBackBtn={true} />
+      <SafeAreaView style={{flex: 1}}>
+        <Text>TaskDetailsScreen</Text>
+      </SafeAreaView>
+    </>
   );
 };
 
