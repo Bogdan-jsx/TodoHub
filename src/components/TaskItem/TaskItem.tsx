@@ -4,9 +4,13 @@ import {navigate} from 'src/navigation/navigation';
 import {NativeSyntheticEvent, View} from 'react-native';
 import {ContextMenuOnPressNativeEvent} from 'react-native-context-menu-view';
 import {ActionsNames, CONTEXT_MENU_ACTIONS} from './config';
-import {CheckboxWrapper, styles} from './TaskIten.styled';
+import {CheckboxWrapper, ColorIndicator, styles} from './TaskIten.styled';
 import {DateTime} from 'luxon';
 import {TaskType} from 'src/types';
+import {useDispatch, useSelector} from 'react-redux';
+import {sectionsSelector} from 'src/store/sections/selectors';
+import {SectionType} from 'src/store/sections/types';
+import {markTaskAsRead} from 'src/store/tasks/actions';
 
 type TaskItemProps = {
   task: TaskType;
@@ -14,6 +18,13 @@ type TaskItemProps = {
 
 const TaskItem: React.FC<TaskItemProps> = ({task}) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const sections = useSelector(sectionsSelector);
+  const color = sections.find(
+    (item: SectionType) => item.id === task.sectionId,
+  ).color;
+
   const isTaskDone = useMemo(() => {
     return !task.subTasks.some(item => !item.isDone);
   }, [task.subTasks]);
@@ -38,6 +49,10 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
           navigate('TaskDetailsScreen');
           break;
 
+        case ActionsNames.MarkAsDone:
+          dispatch(markTaskAsRead(task.id));
+          break;
+
         case ActionsNames.ChangeDate:
           break;
 
@@ -60,6 +75,15 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     );
   }, [theme.colors.primary]);
 
+  const renderColor = useCallback(
+    () => (
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <ColorIndicator color={color} />
+      </View>
+    ),
+    [color],
+  );
+
   return (
     <List.Accordion
       {...contextProps}
@@ -67,6 +91,7 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
       {...(isTaskDone && {
         titleStyle: styles.done,
       })}
+      left={renderColor}
       description={`${uncompletedTaskNumber}/${allTasksNumber} subtasks left (Due ${
         isDueTommorow
           ? 'today'

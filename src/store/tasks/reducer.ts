@@ -22,7 +22,7 @@ export default (
       return {
         ...state,
         tasks: [
-          state.tasks.map(item =>
+          ...state.tasks.map(item =>
             item.id === action.payload.id
               ? {...item, dueDate: action.payload.date}
               : item,
@@ -40,7 +40,7 @@ export default (
       return {
         ...state,
         tasks: [
-          state.tasks.map(item =>
+          ...state.tasks.map(item =>
             item.id === action.payload.id
               ? {
                   ...item,

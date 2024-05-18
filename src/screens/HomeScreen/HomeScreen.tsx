@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 import {Divider, List, useTheme} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import AddTaskBtn from 'src/components/AddTaskBtn/AddTaskBtn';
@@ -40,10 +40,10 @@ const HomeScreen = () => {
     return (
       <>
         {tasksToRender.map(item => (
-          <>
+          <View key={item.id}>
             <Divider />
             <TaskItem task={item} />
-          </>
+          </View>
         ))}
       </>
     );
