@@ -11,86 +11,97 @@ import ContextMenu, {
 import {CONTEXT_ACTIONS} from './config';
 import {ContextActionNames} from './types';
 import ColorPicker from 'react-native-wheel-color-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {sectionsSelector} from 'src/store/sections/selectors';
+import {SectionType} from 'src/store/sections/types';
+import {tasksSelector} from 'src/store/tasks/selectors';
+import {TaskType} from 'src/types';
+import {
+  changeSectionColor,
+  deleteSection,
+  setSelectedSections,
+} from 'src/store/sections/actions';
 
 const SectionsScreen = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const sections = useSelector(sectionsSelector);
+  const tasks = useSelector(tasksSelector);
 
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
+  const [color, setColor] = useState<string>('');
+  const [changeColorId, setChangeColorId] = useState<string>('');
 
-  const renderColor = (color: string) => <ColorIndication color={color} />;
+  const renderColor = (indicatorColor: string) => (
+    <ColorIndication color={indicatorColor} />
+  );
 
-  const onContextMenuActionPress = (
-    event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
-  ) => {
-    switch (event.nativeEvent.name) {
-      case ContextActionNames.ChangeColor:
-        setShowColorPicker(true);
-        break;
+  const getContextMenuActionPress =
+    (sectionId: string, sectionColor: string) =>
+    (event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      switch (event.nativeEvent.name) {
+        case ContextActionNames.ChangeColor:
+          setChangeColorId(sectionId);
+          setColor(sectionColor);
+          setShowColorPicker(true);
+          break;
 
-      case ContextActionNames.Delete:
-        break;
+        case ContextActionNames.Delete:
+          dispatch(deleteSection(sectionId));
+          break;
 
-      default:
-        break;
-    }
-  };
+        default:
+          break;
+      }
+    };
 
   return (
     <>
       <HeaderBar title="Task sections" shouldDisplayBackBtn={false} />
       <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
         <ScrollView style={{paddingHorizontal: 8}}>
-          <ContextMenu
-            actions={CONTEXT_ACTIONS}
-            onPress={onContextMenuActionPress}>
-            <Card
-              style={{marginVertical: 4}}
-              onPress={() => navigate('SectionDetailsScreen')}>
-              <Card.Title
-                title={'Section 1'}
-                subtitle={'5 undone tasks left'}
-                left={() => renderColor('red')}
-              />
-            </Card>
-          </ContextMenu>
-          <ContextMenu
-            actions={CONTEXT_ACTIONS}
-            onPress={onContextMenuActionPress}>
-            <Card
-              style={{marginVertical: 4}}
-              onPress={() => navigate('SectionDetailsScreen')}>
-              <Card.Title
-                title={'Section 1'}
-                subtitle={'5 undone tasks left'}
-                left={() => renderColor('red')}
-              />
-            </Card>
-          </ContextMenu>
-          <ContextMenu
-            actions={CONTEXT_ACTIONS}
-            onPress={onContextMenuActionPress}>
-            <Card
-              style={{marginVertical: 4}}
-              onPress={() => navigate('SectionDetailsScreen')}>
-              <Card.Title
-                title={'Section 1'}
-                subtitle={'5 undone tasks left'}
-                left={() => renderColor('red')}
-              />
-            </Card>
-          </ContextMenu>
+          {sections.map((item: SectionType) => {
+            const undoneTasksCount = tasks.filter(
+              (taskItem: TaskType) =>
+                taskItem.sectionId === item.id &&
+                taskItem.subTasks.some(item => !item.isDone),
+            ).length;
+            return (
+              <ContextMenu
+                actions={CONTEXT_ACTIONS}
+                onPress={getContextMenuActionPress(item.id, item.color)}
+                key={item.id}>
+                <Card
+                  style={{marginVertical: 4}}
+                  onPress={() => {
+                    dispatch(setSelectedSections(item.id));
+                    navigate('SectionDetailsScreen');
+                  }}>
+                  <Card.Title
+                    title={item.name}
+                    subtitle={`${undoneTasksCount} undone tasks left`}
+                    left={() => renderColor(item.color)}
+                  />
+                </Card>
+              </ContextMenu>
+            );
+          })}
         </ScrollView>
         <AddTaskBtn screenToRedirect="AddSectionScreen" />
       </SafeAreaView>
       <Portal>
         <Modal
           visible={showColorPicker}
-          onDismiss={() => setShowColorPicker(false)}
+          onDismiss={() => {
+            dispatch(changeSectionColor(changeColorId, color));
+            setShowColorPicker(false);
+          }}
           contentContainerStyle={[
             {backgroundColor: theme.colors.background},
             styles.modal,
           ]}>
-          <ColorPicker onColorChange={color => console.log(color)} />
+          <ColorPicker onColorChange={setColor} color={color} />
         </Modal>
       </Portal>
     </>

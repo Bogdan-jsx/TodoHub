@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {
   Button,
@@ -16,14 +16,26 @@ import {
   ColorIndicatorWrapper,
   styles,
 } from './AddSectionScreen.styled';
+import {useDispatch} from 'react-redux';
+import {addSection} from 'src/store/sections/actions';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
+import {back} from 'src/navigation/navigation';
 
 const AddSectionScreen = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const [sectionName, setSectionName] = useState<string>('');
   const [showNameError, setShowNameError] = useState<boolean>(false);
 
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
   const [color, setColor] = useState<string>('#fcba03');
+
+  const createSection = useCallback(() => {
+    dispatch(addSection({name: sectionName, color, id: uuidv4()}));
+    back();
+  }, [color, dispatch, sectionName]);
+
   return (
     <>
       <HeaderBar title="Add section" shouldDisplayBackBtn={true} />
@@ -60,7 +72,7 @@ const AddSectionScreen = () => {
                 setShowNameError(true);
                 return;
               }
-              console.log('Create section');
+              createSection();
             }}>
             Create task
           </Button>
