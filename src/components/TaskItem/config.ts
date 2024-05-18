@@ -18,7 +18,7 @@ export const MOCK_TASK: TaskType = {
   id: 'kjefgrngjher',
   title: 'Mock task 1',
   sectionId: 'fejfwif',
-  dueDate: '2024-05-18',
+  dueDate: new Date('2024-05-18'),
   subTasks: [
     {
       id: 'feklrg',
