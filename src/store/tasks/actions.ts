@@ -2,7 +2,7 @@ import {TaskType} from 'src/types';
 import {TasksActionsType} from './types';
 
 export const addTask = (task: TaskType) => ({
-  type: TasksActionsType.ADD_SECTION,
+  type: TasksActionsType.ADD_TASK,
   payload: {task},
 });
 
@@ -19,4 +19,9 @@ export const deleteTask = (id: string) => ({
 export const markTaskAsRead = (id: string) => ({
   type: TasksActionsType.MARK_TASK_AS_DONE,
   payload: {id},
+});
+
+export const setIsFromSection = (isFromSection: boolean) => ({
+  type: TasksActionsType.SET_IS_FROM_SECTION,
+  payload: {isFromSection},
 });

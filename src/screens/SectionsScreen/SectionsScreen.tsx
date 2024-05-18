@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NativeSyntheticEvent, SafeAreaView, ScrollView} from 'react-native';
-import {Card, Modal, Portal, useTheme} from 'react-native-paper';
+import {Card, Modal, Portal, Text, useTheme} from 'react-native-paper';
 import AddTaskBtn from 'src/components/AddTaskBtn/AddTaskBtn';
 import {HeaderBar} from 'src/components/HeaderBar';
 import {navigate} from 'src/navigation/navigation';
@@ -61,12 +61,20 @@ const SectionsScreen = () => {
       <HeaderBar title="Task sections" shouldDisplayBackBtn={false} />
       <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
         <ScrollView style={{paddingHorizontal: 8}}>
+          {sections.length === 0 && (
+            <Text
+              variant="bodyLarge"
+              style={{textAlign: 'center', marginTop: 250}}>
+              No task sections have been created yet
+            </Text>
+          )}
           {sections.map((item: SectionType) => {
-            const undoneTasksCount = tasks.filter(
-              (taskItem: TaskType) =>
-                taskItem.sectionId === item.id &&
-                taskItem.subTasks.some(item => !item.isDone),
-            ).length;
+            const undoneTasksCount =
+              tasks?.filter(
+                (taskItem: TaskType) =>
+                  taskItem.sectionId === item.id &&
+                  taskItem.subTasks.some(item => !item.isDone),
+              ).length || 0;
             return (
               <ContextMenu
                 actions={CONTEXT_ACTIONS}

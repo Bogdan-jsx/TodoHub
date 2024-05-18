@@ -8,6 +8,6 @@ export type TaskType = {
   id: string;
   title: string;
   sectionId: string;
-  dueDate: Date;
+  dueDate: string;
   subTasks: SubTaskType[];
 };

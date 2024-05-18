@@ -3,9 +3,11 @@ import {TasksActionsType} from './types';
 
 type TasksStateType = {
   tasks: TaskType[];
+  isFromSection: boolean;
 };
 const initialState: TasksStateType = {
   tasks: [],
+  isFromSection: false,
 };
 
 export default (
@@ -13,13 +15,13 @@ export default (
   action: {type: TasksActionsType; payload: any},
 ) => {
   switch (action.type) {
-    case TasksActionsType.ADD_SECTION:
-      return {...state, sections: [...state.tasks, action.payload.task]};
+    case TasksActionsType.ADD_TASK:
+      return {...state, tasks: [...state.tasks, action.payload.task]};
 
     case TasksActionsType.CHANGE_TASK_DUE_DATE:
       return {
         ...state,
-        section: [
+        tasks: [
           state.tasks.map(item =>
             item.id === action.payload.id
               ? {...item, dueDate: action.payload.date}
@@ -32,12 +34,12 @@ export default (
       const tempTasks = [...state.tasks];
       const index = tempTasks.findIndex(item => item.id === action.payload.id);
       tempTasks.splice(index, 1);
-      return {...state, sections: tempTasks};
+      return {...state, tasks: tempTasks};
 
     case TasksActionsType.MARK_TASK_AS_DONE:
       return {
         ...state,
-        section: [
+        tasks: [
           state.tasks.map(item =>
             item.id === action.payload.id
               ? {
@@ -51,6 +53,9 @@ export default (
           ),
         ],
       };
+
+    case TasksActionsType.SET_IS_FROM_SECTION:
+      return {...state, isFromSection: action.payload.isFromSection};
 
     default:
       return state;

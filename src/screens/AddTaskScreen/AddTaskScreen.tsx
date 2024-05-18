@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {SafeAreaView, ScrollView, View} from 'react-native';
 import {
   Button,
@@ -13,35 +13,42 @@ import SectionDropdownItem from 'src/components/SectionDropdownItem/SectionDropd
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {DateTime} from 'luxon';
 import {ChangeDateWrapper, styles} from './AddTaskScreen.styled';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  sectionsSelector,
+  selectedSectionSelector,
+} from 'src/store/sections/selectors';
+import {SectionType} from 'src/store/sections/types';
+import {addTask, setIsFromSection} from 'src/store/tasks/actions';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
+import {back} from 'src/navigation/navigation';
+import {isFromSectionSelector} from 'src/store/tasks/selectors';
 
 const HomeScreen = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const isFromSection = useSelector(isFromSectionSelector);
+  const selectedSectionId = useSelector(selectedSectionSelector);
 
   const [showSectionDropdown, setShowSectionDropdown] =
     useState<boolean>(false);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
-  const sections = useMemo(
-    () => [
-      {title: 'Section 1', color: 'red', id: 'id1'},
-      {title: 'Section 2', color: 'green', id: 'id2'},
-      {title: 'Section 3', color: 'blue', id: 'id3'},
-      {title: 'Section 4', color: 'yellow', id: 'id4'},
-    ],
-    [],
-  );
+  const sections = useSelector(sectionsSelector);
 
   const [selectedSection, setSelectedSection] = useState<string>(
-    sections[0].id,
+    isFromSection ? selectedSectionId : sections[0].id,
   );
 
   const sectionsList = useMemo(() => {
-    return sections.map(item => ({
-      label: item.title,
+    return sections.map((item: SectionType) => ({
+      label: item.name,
       value: item.id,
       custom: (
         <SectionDropdownItem
-          text={item.title}
+          text={item.name}
           color={item.color}
           isSelected={selectedSection === item.id}
         />
@@ -55,11 +62,29 @@ const HomeScreen = () => {
   const [showDateError, setShowDateError] = useState<boolean>(false);
 
   const [subtasks, setSubtasks] = useState<{text: string}[]>([{text: ''}]);
+  const [showSubtaskError, setShowSubtaskError] = useState<boolean>(false);
 
   const [taskText, setTaskText] = useState<string>('');
   const [showTaskTextError, setShowTaskTextError] = useState<boolean>(false);
 
-  const [showSubtaskError, setShowSubtaskError] = useState<boolean>(false);
+  const createTask = useCallback(() => {
+    const subTasks = subtasks.map(item => ({
+      title: item.text,
+      id: uuidv4(),
+      isDone: false,
+    }));
+    dispatch(
+      addTask({
+        id: uuidv4(),
+        title: taskText,
+        sectionId: selectedSection,
+        dueDate: date.toString(),
+        subTasks,
+      }),
+    );
+    back();
+    dispatch(setIsFromSection(false));
+  }, [date, dispatch, selectedSection, subtasks, taskText]);
 
   return (
     <>
@@ -108,15 +133,17 @@ const HomeScreen = () => {
               </HelperText>
             </View>
             <DateTimePickerModal
+              date={date}
               isVisible={showDatePicker}
               mode="date"
               onCancel={() => setShowDatePicker(false)}
               onConfirm={newDate => {
-                if (newDate > new Date()) {
-                  setDate(newDate);
-                } else {
-                  setShowDateError(true);
-                }
+                // if (newDate >= new Date()) {
+                //   setDate(newDate);
+                // } else {
+                //   setShowDateError(true);
+                // }
+                setDate(newDate);
                 setShowDatePicker(false);
               }}
             />
@@ -176,7 +203,7 @@ const HomeScreen = () => {
               setShowSubtaskError(true);
               return;
             }
-            console.log('Create task');
+            createTask();
           }}>
           Create task
         </Button>

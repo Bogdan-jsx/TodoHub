@@ -3,31 +3,30 @@ import React, {useCallback, useMemo} from 'react';
 import {navigate} from 'src/navigation/navigation';
 import {NativeSyntheticEvent, View} from 'react-native';
 import {ContextMenuOnPressNativeEvent} from 'react-native-context-menu-view';
-import {ActionsNames, CONTEXT_MENU_ACTIONS, MOCK_TASK} from './config';
+import {ActionsNames, CONTEXT_MENU_ACTIONS} from './config';
 import {CheckboxWrapper, styles} from './TaskIten.styled';
 import {DateTime} from 'luxon';
+import {TaskType} from 'src/types';
 
 type TaskItemProps = {
-  isLastItem?: boolean;
+  task: TaskType;
 };
 
-const TaskItem: React.FC<TaskItemProps> = ({isLastItem}) => {
+const TaskItem: React.FC<TaskItemProps> = ({task}) => {
   const theme = useTheme();
   const isTaskDone = useMemo(() => {
-    return !MOCK_TASK.subTasks.some(item => !item.isDone);
-  }, []);
+    return !task.subTasks.some(item => !item.isDone);
+  }, [task.subTasks]);
 
   const {uncompletedTaskNumber, allTasksNumber} = useMemo(() => {
-    const uncompletedTasks = MOCK_TASK.subTasks.filter(
-      item => !item.isDone,
-    ).length;
-    const allTasks = MOCK_TASK.subTasks.length;
+    const uncompletedTasks = task.subTasks.filter(item => !item.isDone).length;
+    const allTasks = task.subTasks.length;
 
     return {uncompletedTaskNumber: uncompletedTasks, allTasksNumber: allTasks};
-  }, []);
+  }, [task.subTasks]);
 
   const isDueTommorow =
-    new Date().getDate() === new Date(MOCK_TASK.dueDate).getDate();
+    new Date().getDate() === new Date(task.dueDate).getDate();
 
   const contextProps = {
     contextMenuActions: CONTEXT_MENU_ACTIONS,
@@ -64,21 +63,16 @@ const TaskItem: React.FC<TaskItemProps> = ({isLastItem}) => {
   return (
     <List.Accordion
       {...contextProps}
-      title={MOCK_TASK.title}
+      title={task.title}
       {...(isTaskDone && {
         titleStyle: styles.done,
-      })}
-      {...(isLastItem && {
-        style: {marginBottom: 90},
       })}
       description={`${uncompletedTaskNumber}/${allTasksNumber} subtasks left (Due ${
         isDueTommorow
           ? 'today'
-          : DateTime.fromJSDate(new Date(MOCK_TASK.dueDate)).toFormat(
-              'dd.MM.yyyy',
-            )
+          : DateTime.fromJSDate(new Date(task.dueDate)).toFormat('dd.MM.yyyy')
       })`}>
-      {MOCK_TASK.subTasks.map(item => (
+      {task.subTasks.map(item => (
         <View key={item.id}>
           <Divider />
           <List.Item
