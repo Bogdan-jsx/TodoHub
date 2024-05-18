@@ -1,3 +1,29 @@
+diff --git a/src/components/Checkbox/CheckboxAndroid.tsx b/src/components/Checkbox/CheckboxAndroid.tsx
+index 642602b0fa0e47f984d5b2d10da770b0dfb28018..a4190aced0c430e3463bae5fdc48f0e1da3004a5 100644
+--- a/src/components/Checkbox/CheckboxAndroid.tsx
++++ b/src/components/Checkbox/CheckboxAndroid.tsx
+@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
+     borderRadius: 18,
+     width: 36,
+     height: 36,
+-    padding: 6,
++    padding: 0,
+   },
+   fillContainer: {
+     alignItems: 'center',
+diff --git a/src/components/Checkbox/CheckboxIOS.tsx b/src/components/Checkbox/CheckboxIOS.tsx
+index e5f2c1a021b8d64966c7f62f838baf8ec5864274..060460c9fc47cf1d54822095b3edb36e09e8abc9 100644
+--- a/src/components/Checkbox/CheckboxIOS.tsx
++++ b/src/components/Checkbox/CheckboxIOS.tsx
+@@ -94,7 +94,7 @@ CheckboxIOS.displayName = 'Checkbox.IOS';
+ const styles = StyleSheet.create({
+   container: {
+     borderRadius: 18,
+-    padding: 6,
++    padding: 0,
+   },
+ });
+ 
 diff --git a/src/components/List/ListAccordion.tsx b/src/components/List/ListAccordion.tsx
 index 7c850988984b2d0dabbd5727c1ec5466d8f676cc..ef4d2c572a7898bac91be4d70dc5e41d4a3341c9 100644
 --- a/src/components/List/ListAccordion.tsx

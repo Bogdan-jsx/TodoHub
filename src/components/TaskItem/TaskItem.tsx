@@ -1,23 +1,36 @@
-import {Divider, List} from 'react-native-paper';
-import React from 'react';
+import {Checkbox, Divider, List, useTheme} from 'react-native-paper';
+import React, {useCallback, useMemo} from 'react';
 import {navigate} from 'src/navigation/navigation';
-import {NativeSyntheticEvent} from 'react-native';
+import {NativeSyntheticEvent, View} from 'react-native';
 import {ContextMenuOnPressNativeEvent} from 'react-native-context-menu-view';
+import {ActionsNames, CONTEXT_MENU_ACTIONS, MOCK_TASK} from './config';
+import {CheckboxWrapper, styles} from './TaskIten.styled';
+import {DateTime} from 'luxon';
 
-enum ActionsNames {
-  Details = 'See details',
-  ChangeDate = 'Change due date',
-  Delete = 'Delete',
-}
+type TaskItemProps = {
+  isLastItem?: boolean;
+};
 
-const TaskItem = () => {
-  const contextMenuActions = [
-    {title: ActionsNames.Details},
-    {title: ActionsNames.ChangeDate},
-    {title: ActionsNames.Delete},
-  ];
+const TaskItem: React.FC<TaskItemProps> = ({isLastItem}) => {
+  const theme = useTheme();
+  const isTaskDone = useMemo(() => {
+    return !MOCK_TASK.subTasks.some(item => !item.isDone);
+  }, []);
+
+  const {uncompletedTaskNumber, allTasksNumber} = useMemo(() => {
+    const uncompletedTasks = MOCK_TASK.subTasks.filter(
+      item => !item.isDone,
+    ).length;
+    const allTasks = MOCK_TASK.subTasks.length;
+
+    return {uncompletedTaskNumber: uncompletedTasks, allTasksNumber: allTasks};
+  }, []);
+
+  const isDueTommorow =
+    new Date().getDate() === new Date(MOCK_TASK.dueDate).getDate();
+
   const contextProps = {
-    contextMenuActions,
+    contextMenuActions: CONTEXT_MENU_ACTIONS,
     onContextMenuActionPress: (
       event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
     ) => {
@@ -36,17 +49,48 @@ const TaskItem = () => {
       }
     },
   };
+
+  const renderCheckbox = useCallback(() => {
+    return (
+      <CheckboxWrapper color={theme.colors.primary}>
+        <Checkbox
+          status={'unchecked'}
+          // onPress={() => setIsChecked(prev => !prev)}
+        />
+      </CheckboxWrapper>
+    );
+  }, [theme.colors.primary]);
+
   return (
     <List.Accordion
       {...contextProps}
-      title={'Some task 1'}
-      titleStyle={{
-        textDecorationStyle: 'solid',
-        textDecorationLine: 'line-through',
-      }}
-      description={'2/7 subtasks left (Due tomorrow)'}>
-      <Divider />
-      <List.Item title={'Some subtask 1'} style={{paddingLeft: 12}} />
+      title={MOCK_TASK.title}
+      {...(isTaskDone && {
+        titleStyle: styles.done,
+      })}
+      {...(isLastItem && {
+        style: {marginBottom: 90},
+      })}
+      description={`${uncompletedTaskNumber}/${allTasksNumber} subtasks left (Due ${
+        isDueTommorow
+          ? 'today'
+          : DateTime.fromJSDate(new Date(MOCK_TASK.dueDate)).toFormat(
+              'dd.MM.yyyy',
+            )
+      })`}>
+      {MOCK_TASK.subTasks.map(item => (
+        <View key={item.id}>
+          <Divider />
+          <List.Item
+            title={item.title}
+            style={styles.subTask}
+            {...(item.isDone && {
+              titleStyle: styles.done,
+            })}
+            left={renderCheckbox}
+          />
+        </View>
+      ))}
     </List.Accordion>
   );
 };

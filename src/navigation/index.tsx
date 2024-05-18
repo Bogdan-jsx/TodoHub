@@ -6,6 +6,7 @@ import TaskDetailsScreen from 'src/screens/TaskDetailsScreen';
 import SettingsScreen from 'src/screens/SettingsScreen';
 import TabsStack from './TabsStack';
 import {navigationRef} from './navigation';
+import SectionDetailsScreen from 'src/screens/SectionDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,10 @@ const Navigation = () => {
         <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
         <Stack.Screen name="TaskDetailsScreen" component={TaskDetailsScreen} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
+        <Stack.Screen
+          name="SectionDetailsScreen"
+          component={SectionDetailsScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
