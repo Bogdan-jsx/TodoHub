@@ -33,7 +33,7 @@ const SectionsDetailsScreen = () => {
           <TaskItem />
           <TaskItem />
           <TaskItem />
-          <TaskItem isLastItem={true} />
+          <TaskItem />
         </ScrollView>
         <Button
           mode="contained-tonal"

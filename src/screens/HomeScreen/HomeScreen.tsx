@@ -44,7 +44,7 @@ const HomeScreen = () => {
             <Divider />
           </List.Section>
         </ScrollView>
-        <AddTaskBtn />
+        <AddTaskBtn screenToRedirect="AddTaskScreen" />
       </SafeAreaView>
     </>
   );

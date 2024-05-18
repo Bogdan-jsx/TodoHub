@@ -1,15 +1,20 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
-import {Card} from 'react-native-paper';
+import {SafeAreaView, ScrollView} from 'react-native';
+import {Card, useTheme} from 'react-native-paper';
 import AddTaskBtn from 'src/components/AddTaskBtn/AddTaskBtn';
 import {HeaderBar} from 'src/components/HeaderBar';
 import {navigate} from 'src/navigation/navigation';
+import {ColorIndication} from './SectionsScreen.styled';
 
-const HomeScreen = () => {
+const SectionsScreen = () => {
+  const theme = useTheme();
+
+  const renderColor = (color: string) => <ColorIndication color={color} />;
+
   return (
     <>
       <HeaderBar title="Task sections" shouldDisplayBackBtn={false} />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
         <ScrollView style={{paddingHorizontal: 8}}>
           <Card
             style={{marginVertical: 4}}
@@ -17,15 +22,7 @@ const HomeScreen = () => {
             <Card.Title
               title={'Section 1'}
               subtitle={'5 undone tasks left'}
-              left={() => (
-                <View
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 16,
-                    backgroundColor: 'red',
-                  }}></View>
-              )}
+              left={() => renderColor('red')}
             />
           </Card>
           <Card
@@ -34,15 +31,7 @@ const HomeScreen = () => {
             <Card.Title
               title={'Section 1'}
               subtitle={'5 undone tasks left'}
-              left={() => (
-                <View
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 16,
-                    backgroundColor: 'red',
-                  }}></View>
-              )}
+              left={() => renderColor('red')}
             />
           </Card>
           <Card
@@ -51,22 +40,14 @@ const HomeScreen = () => {
             <Card.Title
               title={'Section 1'}
               subtitle={'5 undone tasks left'}
-              left={() => (
-                <View
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 16,
-                    backgroundColor: 'red',
-                  }}></View>
-              )}
+              left={() => renderColor('red')}
             />
           </Card>
         </ScrollView>
-        <AddTaskBtn />
+        <AddTaskBtn screenToRedirect="AddSectionScreen" />
       </SafeAreaView>
     </>
   );
 };
 
-export default HomeScreen;
+export default SectionsScreen;

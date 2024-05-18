@@ -5,4 +5,5 @@ export type RootStackParamList = {
   AddTaskScreen: undefined;
   SettingsScreen: undefined;
   SectionDetailsScreen: undefined;
+  AddSectionScreen: undefined;
 };
