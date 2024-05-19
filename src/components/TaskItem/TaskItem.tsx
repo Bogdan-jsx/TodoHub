@@ -50,8 +50,8 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     return {uncompletedTaskNumber: uncompletedTasks, allTasksNumber: allTasks};
   }, [task.subTasks]);
 
-  const isDueTommorow =
-    new Date().getDate() === new Date(task.dueDate).getDate();
+  const isDueToday =
+    new Date().toDateString() === new Date(task.dueDate).toDateString();
 
   const contextProps = {
     contextMenuActions: CONTEXT_MENU_ACTIONS.filter(
@@ -148,7 +148,7 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
             left: uncompletedTaskNumber,
             all: allTasksNumber,
           })} ${
-            isDueTommorow
+            isDueToday
               ? t('taskItem.dueDate.dueToday.text')
               : t('taskItem.dueDate.text', {
                   date: DateTime.fromJSDate(new Date(task.dueDate)).toFormat(

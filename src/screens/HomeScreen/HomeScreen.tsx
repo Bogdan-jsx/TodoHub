@@ -68,12 +68,12 @@ const HomeScreen = () => {
             </Text>
           )}
           {taskGroups.overdue.length > 0 && (
-            <List.Section title="Overdue">
+            <List.Section title={t('screens.home.groups.overdue')}>
               {renderMapTasks(taskGroups.overdue)}
             </List.Section>
           )}
           {taskGroups.dueToday.length > 0 && (
-            <List.Section title="Due today">
+            <List.Section title={t('screens.home.groups.dueToday')}>
               {renderMapTasks(taskGroups.dueToday)}
             </List.Section>
           )}
@@ -82,7 +82,9 @@ const HomeScreen = () => {
               {isOnlyRest ? (
                 renderMapTasks(taskGroups.rest)
               ) : (
-                <List.Section title="Rest" style={{marginBottom: 90}}>
+                <List.Section
+                  title={t('screens.home.groups.rest')}
+                  style={{marginBottom: 90}}>
                   {renderMapTasks(taskGroups.rest)}
                 </List.Section>
               )}

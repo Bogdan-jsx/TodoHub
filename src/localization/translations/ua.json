@@ -10,6 +10,7 @@
     "screens.settings.title": "Налаштування",
     "taskItem.subTasksLeft.text": "{{left}}/{{all}} підзадач залишилось",
     "taskItem.dueDate.text": "(Закінчити до {{date}})",
+    "taskItem.dueDate.dueToday.text": "(Закінчити сьогодні)",
     "taskItem.contextMenu.seeDetails": "Переглянути деталі",
     "taskItem.contextMenu.markAsDone": "Позначити як виконане",
     "taskItem.contextMenu.changeDate": "Змінити дату",
@@ -39,5 +40,8 @@
     "screens.sections.emptyState": "Жодного розділу ще не було створено",
     "screens.sectionDetails.emptyState": "Жодної задачі ще не було створено в цьому розділі",
     "screens.home.emptyState": "Жодної задачі ще не було створено",
-    "screens.sectionDetails.addTask": "Додати задачу до цього розділу"
+    "screens.sectionDetails.addTask": "Додати задачу до цього розділу",
+    "screens.home.groups.overdue": "Прострочено",
+    "screens.home.groups.dueToday": "Закінчити сьогодні",
+    "screens.home.groups.rest": "Решта"
 }

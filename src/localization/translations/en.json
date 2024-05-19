@@ -40,5 +40,8 @@
     "screens.sections.emptyState": "No task sections have been created yet",
     "screens.sectionDetails.emptyState": "No tasks have been created in this category yet",
     "screens.home.emptyState": "No tasks have been created yet",
-    "screens.sectionDetails.addTask": "Add task to this section"
+    "screens.sectionDetails.addTask": "Add task to this section",
+    "screens.home.groups.overdue": "Overdue",
+    "screens.home.groups.dueToday": "Due today",
+    "screens.home.groups.rest": "Rest"
 }
