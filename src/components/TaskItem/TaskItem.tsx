@@ -80,6 +80,7 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
           break;
       }
     },
+    onCancel: () => setDisableOpen(false),
   };
 
   const renderCheckbox = useCallback(
@@ -122,6 +123,8 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     [color],
   );
 
+  const [disableOpen, setDisableOpen] = useState<boolean>(false);
+
   return (
     <>
       <List.Accordion
@@ -131,6 +134,10 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
           titleStyle: styles.done,
         })}
         left={renderColor}
+        onLongPress={() => setDisableOpen(true)}
+        {...(disableOpen && {
+          onPress: () => null,
+        })}
         description={`${t('taskItem.subTasksLeft.text', {
           left: uncompletedTaskNumber,
           all: allTasksNumber,
