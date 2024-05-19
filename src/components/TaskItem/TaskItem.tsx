@@ -1,16 +1,23 @@
 import {Checkbox, Divider, List, useTheme} from 'react-native-paper';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {navigate} from 'src/navigation/navigation';
 import {NativeSyntheticEvent, View} from 'react-native';
 import {ContextMenuOnPressNativeEvent} from 'react-native-context-menu-view';
 import {ActionsNames, CONTEXT_MENU_ACTIONS} from './config';
 import {CheckboxWrapper, ColorIndicator, styles} from './TaskIten.styled';
 import {DateTime} from 'luxon';
-import {TaskType} from 'src/types';
+import {SubTaskType, TaskType} from 'src/types';
 import {useDispatch, useSelector} from 'react-redux';
 import {sectionsSelector} from 'src/store/sections/selectors';
 import {SectionType} from 'src/store/sections/types';
-import {markTaskAsRead} from 'src/store/tasks/actions';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import {
+  changeTaskDueDate,
+  deleteTask,
+  markSubtaskAsDone,
+  markSubtaskAsUndone,
+  markTaskAsRead,
+} from 'src/store/tasks/actions';
 
 type TaskItemProps = {
   task: TaskType;
@@ -19,6 +26,8 @@ type TaskItemProps = {
 const TaskItem: React.FC<TaskItemProps> = ({task}) => {
   const theme = useTheme();
   const dispatch = useDispatch();
+
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
   const sections = useSelector(sectionsSelector);
   const color = sections.find(
@@ -54,26 +63,38 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
           break;
 
         case ActionsNames.ChangeDate:
+          setShowDatePicker(true);
           break;
 
         case ActionsNames.Delete:
+          dispatch(deleteTask(task.id));
           break;
+
         default:
           break;
       }
     },
   };
 
-  const renderCheckbox = useCallback(() => {
-    return (
-      <CheckboxWrapper color={theme.colors.primary}>
-        <Checkbox
-          status={'unchecked'}
-          // onPress={() => setIsChecked(prev => !prev)}
-        />
-      </CheckboxWrapper>
-    );
-  }, [theme.colors.primary]);
+  const renderCheckbox = useCallback(
+    (subtask: SubTaskType) => {
+      return (
+        <CheckboxWrapper color={theme.colors.primary}>
+          <Checkbox
+            status={subtask.isDone ? 'checked' : 'unchecked'}
+            onPress={() =>
+              dispatch(
+                subtask.isDone
+                  ? markSubtaskAsUndone(task.id, subtask.id)
+                  : markSubtaskAsDone(task.id, subtask.id),
+              )
+            }
+          />
+        </CheckboxWrapper>
+      );
+    },
+    [dispatch, task.id, theme.colors.primary],
+  );
 
   const renderColor = useCallback(
     () => (
@@ -85,32 +106,47 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
   );
 
   return (
-    <List.Accordion
-      {...contextProps}
-      title={task.title}
-      {...(isTaskDone && {
-        titleStyle: styles.done,
-      })}
-      left={renderColor}
-      description={`${uncompletedTaskNumber}/${allTasksNumber} subtasks left (Due ${
-        isDueTommorow
-          ? 'today'
-          : DateTime.fromJSDate(new Date(task.dueDate)).toFormat('dd.MM.yyyy')
-      })`}>
-      {task.subTasks.map(item => (
-        <View key={item.id}>
-          <Divider />
-          <List.Item
-            title={item.title}
-            style={styles.subTask}
-            {...(item.isDone && {
-              titleStyle: styles.done,
-            })}
-            left={renderCheckbox}
-          />
-        </View>
-      ))}
-    </List.Accordion>
+    <>
+      <List.Accordion
+        {...contextProps}
+        title={task.title}
+        {...(isTaskDone && {
+          titleStyle: styles.done,
+        })}
+        left={renderColor}
+        description={`${uncompletedTaskNumber}/${allTasksNumber} subtasks left (Due ${
+          isDueTommorow
+            ? 'today'
+            : DateTime.fromJSDate(new Date(task.dueDate)).toFormat('dd.MM.yyyy')
+        })`}>
+        {task.subTasks.map(item => (
+          <View key={item.id}>
+            <Divider />
+            <List.Item
+              title={item.title}
+              style={styles.subTask}
+              {...(item.isDone && {
+                titleStyle: styles.done,
+              })}
+              left={() => renderCheckbox(item)}
+            />
+          </View>
+        ))}
+      </List.Accordion>
+      <DateTimePickerModal
+        date={new Date(task.dueDate)}
+        isVisible={showDatePicker}
+        mode="date"
+        onCancel={() => setShowDatePicker(false)}
+        onConfirm={newDate => {
+          if (newDate <= new Date()) {
+            return;
+          }
+          dispatch(changeTaskDueDate(task.id, newDate.toString()));
+          setShowDatePicker(false);
+        }}
+      />
+    </>
   );
 };
 

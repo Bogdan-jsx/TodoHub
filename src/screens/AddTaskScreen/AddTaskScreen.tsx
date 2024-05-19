@@ -138,11 +138,11 @@ const HomeScreen = () => {
               mode="date"
               onCancel={() => setShowDatePicker(false)}
               onConfirm={newDate => {
-                // if (newDate >= new Date()) {
-                //   setDate(newDate);
-                // } else {
-                //   setShowDateError(true);
-                // }
+                if (newDate >= new Date()) {
+                  setDate(newDate);
+                } else {
+                  setShowDateError(true);
+                }
                 setDate(newDate);
                 setShowDatePicker(false);
               }}

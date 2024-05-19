@@ -57,6 +57,48 @@ export default (
     case TasksActionsType.SET_IS_FROM_SECTION:
       return {...state, isFromSection: action.payload.isFromSection};
 
+    case TasksActionsType.MARK_SUBTASK_AS_DONE:
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map(item =>
+            item.id === action.payload.taskId
+              ? {
+                  ...item,
+                  subTasks: [
+                    ...item.subTasks.map(subtaskItem =>
+                      subtaskItem.id === action.payload.subtaskId
+                        ? {...subtaskItem, isDone: true}
+                        : subtaskItem,
+                    ),
+                  ],
+                }
+              : item,
+          ),
+        ],
+      };
+
+    case TasksActionsType.MARK_SUBTASK_AS_UNDONE:
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map(item =>
+            item.id === action.payload.taskId
+              ? {
+                  ...item,
+                  subTasks: [
+                    ...item.subTasks.map(subtaskItem =>
+                      subtaskItem.id === action.payload.subtaskId
+                        ? {...subtaskItem, isDone: false}
+                        : subtaskItem,
+                    ),
+                  ],
+                }
+              : item,
+          ),
+        ],
+      };
+
     default:
       return state;
   }
