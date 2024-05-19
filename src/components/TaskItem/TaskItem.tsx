@@ -1,7 +1,7 @@
 import {Checkbox, Divider, List, useTheme} from 'react-native-paper';
 import React, {useCallback, useMemo, useState} from 'react';
 import {navigate} from 'src/navigation/navigation';
-import {NativeSyntheticEvent, View} from 'react-native';
+import {NativeSyntheticEvent, Platform, View} from 'react-native';
 import {ContextMenuOnPressNativeEvent} from 'react-native-context-menu-view';
 import {ActionsNames, CONTEXT_MENU_ACTIONS} from './config';
 import {CheckboxWrapper, ColorIndicator, styles} from './TaskIten.styled';
@@ -19,6 +19,7 @@ import {
   markTaskAsRead,
   setSelectedTask,
 } from 'src/store/tasks/actions';
+import {useTranslation} from 'react-i18next';
 
 type TaskItemProps = {
   task: TaskType;
@@ -27,6 +28,7 @@ type TaskItemProps = {
 const TaskItem: React.FC<TaskItemProps> = ({task}) => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
@@ -50,25 +52,27 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     new Date().getDate() === new Date(task.dueDate).getDate();
 
   const contextProps = {
-    contextMenuActions: CONTEXT_MENU_ACTIONS,
+    contextMenuActions: CONTEXT_MENU_ACTIONS.map(item => ({
+      title: t(item.title),
+    })),
     onContextMenuActionPress: (
       event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
     ) => {
       switch (event.nativeEvent.name) {
-        case ActionsNames.Details:
+        case t(ActionsNames.Details):
           dispatch(setSelectedTask(task.id));
           navigate('TaskDetailsScreen');
           break;
 
-        case ActionsNames.MarkAsDone:
+        case t(ActionsNames.MarkAsDone):
           dispatch(markTaskAsRead(task.id));
           break;
 
-        case ActionsNames.ChangeDate:
+        case t(ActionsNames.ChangeDate):
           setShowDatePicker(true);
           break;
 
-        case ActionsNames.Delete:
+        case t(ActionsNames.Delete):
           dispatch(deleteTask(task.id));
           break;
 
@@ -80,7 +84,7 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
 
   const renderCheckbox = useCallback(
     (subtask: SubTaskType) => {
-      return (
+      return Platform.OS === 'ios' ? (
         <CheckboxWrapper color={theme.colors.primary}>
           <Checkbox
             status={subtask.isDone ? 'checked' : 'unchecked'}
@@ -93,6 +97,17 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
             }
           />
         </CheckboxWrapper>
+      ) : (
+        <Checkbox
+          status={subtask.isDone ? 'checked' : 'unchecked'}
+          onPress={() =>
+            dispatch(
+              subtask.isDone
+                ? markSubtaskAsUndone(task.id, subtask.id)
+                : markSubtaskAsDone(task.id, subtask.id),
+            )
+          }
+        />
       );
     },
     [dispatch, task.id, theme.colors.primary],
@@ -116,11 +131,18 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
           titleStyle: styles.done,
         })}
         left={renderColor}
-        description={`${uncompletedTaskNumber}/${allTasksNumber} subtasks left (Due ${
+        description={`${t('taskItem.subTasksLeft.text', {
+          left: uncompletedTaskNumber,
+          all: allTasksNumber,
+        })} ${
           isDueTommorow
-            ? 'today'
-            : DateTime.fromJSDate(new Date(task.dueDate)).toFormat('dd.MM.yyyy')
-        })`}>
+            ? t('taskItem.dueDate.dueToday.text')
+            : t('taskItem.dueDate.text', {
+                date: DateTime.fromJSDate(new Date(task.dueDate)).toFormat(
+                  'dd.MM.yyyy',
+                ),
+              })
+        }`}>
         {task.subTasks.map(item => (
           <View key={item.id}>
             <Divider />

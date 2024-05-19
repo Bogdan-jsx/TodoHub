@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {Platform, SafeAreaView, ScrollView, View} from 'react-native';
 import {
   Button,
   Checkbox,
@@ -34,10 +34,12 @@ import {
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {back} from 'src/navigation/navigation';
+import {useTranslation} from 'react-i18next';
 
 const TaskDetailsScreen = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const task: TaskType = useSelector(selectedTaskSelector);
   const sections: SectionType[] = useSelector(sectionsSelector);
@@ -51,7 +53,7 @@ const TaskDetailsScreen = () => {
 
   const renderCheckbox = useCallback(
     (subtask: SubTaskType) => {
-      return (
+      return Platform.OS === 'ios' ? (
         <CheckboxWrapper color={theme.colors.primary}>
           <Checkbox
             status={subtask.isDone ? 'checked' : 'unchecked'}
@@ -64,6 +66,17 @@ const TaskDetailsScreen = () => {
             }
           />
         </CheckboxWrapper>
+      ) : (
+        <Checkbox
+          status={subtask.isDone ? 'checked' : 'unchecked'}
+          onPress={() =>
+            dispatch(
+              subtask.isDone
+                ? markSubtaskAsUndone(task.id, subtask.id)
+                : markSubtaskAsDone(task.id, subtask.id),
+            )
+          }
+        />
       );
     },
     [dispatch, task.id, theme.colors.primary],
@@ -100,7 +113,10 @@ const TaskDetailsScreen = () => {
 
   return (
     <>
-      <HeaderBar title="Task details" shouldDisplayBackBtn={true} />
+      <HeaderBar
+        title={t('screens.taskDetails.title')}
+        shouldDisplayBackBtn={true}
+      />
       <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
         <ScrollView>
           <View style={{padding: 8, gap: 8}}>
@@ -117,21 +133,22 @@ const TaskDetailsScreen = () => {
             <View>
               <ChangeDateWrapper>
                 <Text variant="bodyLarge">
-                  Due date:{' '}
-                  {DateTime.fromJSDate(new Date(task.dueDate)).toFormat(
-                    'dd.MM.yyyy',
-                  )}
+                  {t('screens.addTask.dueDate', {
+                    date: DateTime.fromJSDate(new Date(task.dueDate)).toFormat(
+                      'dd.MM.yyyy',
+                    ),
+                  })}
                 </Text>
                 <Button
                   onPress={() => {
                     setShowDateError(false);
                     setShowDatePicker(true);
                   }}>
-                  Change
+                  {t('screens.addTask.change')}
                 </Button>
               </ChangeDateWrapper>
               <HelperText visible={showDateError} type="error" padding="none">
-                Date must be in the future
+                {t('screens.addTask.dateError')}
               </HelperText>
             </View>
             <DateTimePickerModal
@@ -149,7 +166,7 @@ const TaskDetailsScreen = () => {
               }}
             />
             <View>
-              <Text variant="bodyLarge">Subtasks: </Text>
+              <Text variant="bodyLarge">{t('screens.addTask.subtasks')}</Text>
               {task.subTasks.map(item => (
                 <>
                   <Divider />
@@ -201,13 +218,13 @@ const TaskDetailsScreen = () => {
                   visible={showSubtaskError}
                   type="error"
                   padding="none">
-                  At least one subtask should not be empty
+                  {t('screens.addTask.subtasks.error')}
                 </HelperText>
               )}
               <View style={{flexDirection: 'row'}}>
                 <Button
                   onPress={() => setNewSubtasks([...newSubtasks, {text: ''}])}>
-                  + Add subtask
+                  {t('screens.addTask.addSubtask')}
                 </Button>
               </View>
             </View>
@@ -224,7 +241,7 @@ const TaskDetailsScreen = () => {
               }
               saveChanges();
             }}>
-            Save changes
+            {t('screens.taskDetails.saveChanges')}
           </Button>
         )}
       </SafeAreaView>

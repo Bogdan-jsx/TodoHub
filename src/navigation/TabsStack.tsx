@@ -7,16 +7,13 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {TabBar} from './TabBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useTranslation} from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 
 const TabsStack = () => {
-  // const renderIcon = useCallback(
-  //   (name: string, color: string) => (
-  //     <MaterialCommunityIcons name={name} color={color} size={28} />
-  //   ),
-  //   [],
-  // );
+  const {t} = useTranslation();
+
   return (
     <Tab.Navigator
       tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
@@ -25,7 +22,7 @@ const TabsStack = () => {
         name="HomeScreen"
         component={HomeScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: t('tabs.home.title'),
           tabBarIcon: ({color, size}) => {
             return <MaterialIcons name="home" size={size} color={color} />;
           },
@@ -35,7 +32,7 @@ const TabsStack = () => {
         name="SectionsScreen"
         component={SectionsScreen}
         options={{
-          tabBarLabel: 'Sections',
+          tabBarLabel: t('tabs.sections.title'),
           tabBarIcon: ({color, size}) => {
             return <MaterialIcons name="list" size={size} color={color} />;
           },

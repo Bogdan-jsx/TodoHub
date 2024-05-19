@@ -1,4 +1,4 @@
 export enum ContextActionNames {
-  Delete = 'Delete',
-  ChangeColor = 'Change color',
+  Delete = 'sectionItem.contextMenu.delete',
+  ChangeColor = 'sectionItem.contextMenu.changeColor',
 }

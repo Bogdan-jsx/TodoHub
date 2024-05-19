@@ -24,10 +24,12 @@ import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {back} from 'src/navigation/navigation';
 import {isFromSectionSelector} from 'src/store/tasks/selectors';
+import {useTranslation} from 'react-i18next';
 
 const HomeScreen = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const isFromSection = useSelector(isFromSectionSelector);
   const selectedSectionId = useSelector(selectedSectionSelector);
@@ -90,7 +92,10 @@ const HomeScreen = () => {
 
   return (
     <>
-      <HeaderBar title="Add new task" shouldDisplayBackBtn={true} />
+      <HeaderBar
+        title={t('screens.addTask.title')}
+        shouldDisplayBackBtn={true}
+      />
       <SafeAreaView
         style={{
           backgroundColor: theme.colors.background,
@@ -99,7 +104,7 @@ const HomeScreen = () => {
         <ScrollView>
           <View style={{padding: 8, gap: 8}}>
             <TextInput
-              label={'Task text'}
+              label={t('screens.addTask.taskText.placeholder')}
               mode="outlined"
               value={taskText}
               onChangeText={newValue => {
@@ -107,6 +112,7 @@ const HomeScreen = () => {
                 setTaskText(newValue);
               }}
               error={showTaskTextError}
+              maxLength={100}
             />
             <DropDown
               visible={showSectionDropdown}
@@ -120,18 +126,20 @@ const HomeScreen = () => {
             <View>
               <ChangeDateWrapper>
                 <Text variant="bodyLarge">
-                  Due date: {DateTime.fromJSDate(date).toFormat('dd.MM.yyyy')}
+                  {t('screens.addTask.dueDate', {
+                    date: DateTime.fromJSDate(date).toFormat('dd.MM.yyyy'),
+                  })}
                 </Text>
                 <Button
                   onPress={() => {
                     setShowDateError(false);
                     setShowDatePicker(true);
                   }}>
-                  Change
+                  {t('screens.addTask.change')}
                 </Button>
               </ChangeDateWrapper>
               <HelperText visible={showDateError} type="error" padding="none">
-                Date must be in the future
+                {t('screens.addTask.dateError')}
               </HelperText>
             </View>
             <DateTimePickerModal
@@ -148,7 +156,7 @@ const HomeScreen = () => {
                 }
               }}
             />
-            <Text variant="bodyLarge">Subtasks:</Text>
+            <Text variant="bodyLarge">{t('screens.addTask.subtasks')}</Text>
             {subtasks.map((item, index) => {
               return (
                 <TextInput
@@ -161,6 +169,7 @@ const HomeScreen = () => {
                     subtasksDuplicate[index].text = newValue;
                     setSubtasks(subtasksDuplicate);
                   }}
+                  maxLength={100}
                   right={
                     <TextInput.Icon
                       icon={'delete'}
@@ -182,12 +191,12 @@ const HomeScreen = () => {
                 visible={showSubtaskError}
                 type="error"
                 padding="none">
-                At least one subtask should not be empty
+                {t('screens.addTask.subtasks.error')}
               </HelperText>
             )}
             <View style={{flexDirection: 'row'}}>
               <Button onPress={() => setSubtasks([...subtasks, {text: ''}])}>
-                + Add subtask
+                {t('screens.addTask.addSubtask')}
               </Button>
             </View>
           </View>
@@ -206,7 +215,7 @@ const HomeScreen = () => {
             }
             createTask();
           }}>
-          Create task
+          {t('screens.addTask.createBtn')}
         </Button>
       </SafeAreaView>
     </>

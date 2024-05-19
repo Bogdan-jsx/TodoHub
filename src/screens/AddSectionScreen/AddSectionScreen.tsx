@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {Keyboard, SafeAreaView, View} from 'react-native';
 import {
   Button,
   Modal,
@@ -21,10 +21,13 @@ import {addSection} from 'src/store/sections/actions';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 import {back} from 'src/navigation/navigation';
+import {useTranslation} from 'react-i18next';
 
 const AddSectionScreen = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
+
   const [sectionName, setSectionName] = useState<string>('');
   const [showNameError, setShowNameError] = useState<boolean>(false);
 
@@ -38,7 +41,10 @@ const AddSectionScreen = () => {
 
   return (
     <>
-      <HeaderBar title="Add section" shouldDisplayBackBtn={true} />
+      <HeaderBar
+        title={t('screens.addSection.title')}
+        shouldDisplayBackBtn={true}
+      />
       <SafeAreaView
         style={{
           backgroundColor: theme.colors.background,
@@ -52,16 +58,21 @@ const AddSectionScreen = () => {
               setSectionName(newValue);
               setShowNameError(false);
             }}
-            label="Section name"
+            label={t('screens.addSection.sectionName.placeholder')}
             error={showNameError}
+            maxLength={50}
           />
           <ChangeColorWrapper>
             <ColorIndicatorWrapper>
               <ColorIndicator color={color} />
               <Text variant="bodyLarge">{color}</Text>
             </ColorIndicatorWrapper>
-            <Button onPress={() => setShowColorPicker(true)}>
-              Change color
+            <Button
+              onPress={() => {
+                Keyboard.dismiss();
+                setShowColorPicker(true);
+              }}>
+              {t('screens.addSection.changeColor')}
             </Button>
           </ChangeColorWrapper>
           <Button
@@ -74,7 +85,7 @@ const AddSectionScreen = () => {
               }
               createSection();
             }}>
-            Create task
+            {t('screens.addSection.createSection')}
           </Button>
         </View>
       </SafeAreaView>

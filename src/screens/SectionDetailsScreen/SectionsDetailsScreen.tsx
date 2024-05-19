@@ -2,7 +2,7 @@ import {SafeAreaView, ScrollView} from 'react-native';
 import {HeaderBar} from 'src/components/HeaderBar';
 import TaskItem from 'src/components/TaskItem';
 import React, {useMemo} from 'react';
-import {Button, useTheme} from 'react-native-paper';
+import {Button, Text, useTheme} from 'react-native-paper';
 import {ColorIndicatior, styles} from './SectionsDetailsScreen.styled';
 import {navigate} from 'src/navigation/navigation';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,10 +14,12 @@ import {
 import {TaskType} from 'src/types';
 import {SectionType} from 'src/store/sections/types';
 import {setIsFromSection} from 'src/store/tasks/actions';
+import {useTranslation} from 'react-i18next';
 
 const SectionsDetailsScreen = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const allTasks = useSelector(tasksSelector);
   const allSections = useSelector(sectionsSelector);
@@ -44,6 +46,13 @@ const SectionsDetailsScreen = () => {
         }}>
         <ScrollView>
           <ColorIndicatior color={section.color} />
+          {sectionTasks.length < 1 && (
+            <Text
+              variant="bodyLarge"
+              style={{textAlign: 'center', marginTop: 250}}>
+              {t('screens.sectionDetails.emptyState')}
+            </Text>
+          )}
           {sectionTasks.map((item: TaskType) => (
             <TaskItem task={item} />
           ))}
@@ -55,7 +64,7 @@ const SectionsDetailsScreen = () => {
             dispatch(setIsFromSection(true));
             navigate('AddTaskScreen');
           }}>
-          Add task to this section
+          {t('screens.sectionDetails.addTask')}
         </Button>
       </SafeAreaView>
     </>

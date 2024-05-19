@@ -22,10 +22,12 @@ import {
   setSelectedSections,
 } from 'src/store/sections/actions';
 import {deleteTask} from 'src/store/tasks/actions';
+import {useTranslation} from 'react-i18next';
 
 const SectionsScreen = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const sections = useSelector(sectionsSelector);
   const tasks = useSelector(tasksSelector);
@@ -34,6 +36,8 @@ const SectionsScreen = () => {
   const [color, setColor] = useState<string>('');
   const [changeColorId, setChangeColorId] = useState<string>('');
 
+  const [isLongPressed, setIsLongPressed] = useState<boolean>(false);
+
   const renderColor = (indicatorColor: string) => (
     <ColorIndication color={indicatorColor} />
   );
@@ -41,14 +45,15 @@ const SectionsScreen = () => {
   const getContextMenuActionPress =
     (sectionId: string, sectionColor: string) =>
     (event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      setIsLongPressed(false);
       switch (event.nativeEvent.name) {
-        case ContextActionNames.ChangeColor:
+        case t(ContextActionNames.ChangeColor):
           setChangeColorId(sectionId);
           setColor(sectionColor);
           setShowColorPicker(true);
           break;
 
-        case ContextActionNames.Delete:
+        case t(ContextActionNames.Delete):
           dispatch(deleteSection(sectionId));
           tasks.map(
             (item: TaskType) =>
@@ -63,14 +68,17 @@ const SectionsScreen = () => {
 
   return (
     <>
-      <HeaderBar title="Task sections" shouldDisplayBackBtn={false} />
+      <HeaderBar
+        title={t('screens.sections.title')}
+        shouldDisplayBackBtn={false}
+      />
       <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
         <ScrollView style={{paddingHorizontal: 8}}>
           {sections.length === 0 && (
             <Text
               variant="bodyLarge"
               style={{textAlign: 'center', marginTop: 250}}>
-              No task sections have been created yet
+              {t('screens.sections.emptyState')}
             </Text>
           )}
           {sections.map((item: SectionType) => {
@@ -82,18 +90,27 @@ const SectionsScreen = () => {
               ).length || 0;
             return (
               <ContextMenu
-                actions={CONTEXT_ACTIONS}
+                actions={CONTEXT_ACTIONS.map(actions => ({
+                  title: t(actions.title),
+                }))}
                 onPress={getContextMenuActionPress(item.id, item.color)}
+                onCancel={() => setIsLongPressed(false)}
                 key={item.id}>
                 <Card
                   style={{marginVertical: 4}}
+                  onLongPress={() => setIsLongPressed(true)}
+                  onPressOut={() => setIsLongPressed(false)}
                   onPress={() => {
-                    dispatch(setSelectedSections(item.id));
-                    navigate('SectionDetailsScreen');
+                    if (!isLongPressed) {
+                      dispatch(setSelectedSections(item.id));
+                      navigate('SectionDetailsScreen');
+                    }
                   }}>
                   <Card.Title
                     title={item.name}
-                    subtitle={`${undoneTasksCount} undone tasks left`}
+                    subtitle={t('sectionItem.undoneTasksCount', {
+                      count: undoneTasksCount,
+                    })}
                     left={() => renderColor(item.color)}
                   />
                 </Card>

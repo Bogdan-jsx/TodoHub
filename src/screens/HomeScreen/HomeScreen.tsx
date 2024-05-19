@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {SafeAreaView, ScrollView, View} from 'react-native';
-import {Divider, List, useTheme} from 'react-native-paper';
+import {Divider, List, Text, useTheme} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import AddTaskBtn from 'src/components/AddTaskBtn/AddTaskBtn';
 import {HeaderBar} from 'src/components/HeaderBar';
@@ -10,6 +11,7 @@ import {TaskType} from 'src/types';
 
 const HomeScreen = () => {
   const theme = useTheme();
+  const {t} = useTranslation();
 
   const tasks = useSelector(tasksSelector);
   const taskGroups = useMemo(() => {
@@ -51,13 +53,20 @@ const HomeScreen = () => {
 
   return (
     <>
-      <HeaderBar title={'Home'} shouldDisplayBackBtn={false} />
+      <HeaderBar title={t('screens.home.title')} shouldDisplayBackBtn={false} />
       <SafeAreaView
         style={{
           backgroundColor: theme.colors.background,
           flex: 1,
         }}>
         <ScrollView>
+          {tasks.length < 1 && (
+            <Text
+              variant="bodyLarge"
+              style={{textAlign: 'center', marginTop: 250}}>
+              {t('screens.home.emptyState')}
+            </Text>
+          )}
           {taskGroups.overdue.length > 0 && (
             <List.Section title="Overdue">
               {renderMapTasks(taskGroups.overdue)}

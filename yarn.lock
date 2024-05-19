@@ -1599,7 +1599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.8.4":
   version: 7.24.5
   resolution: "@babel/runtime@npm:7.24.5"
   dependencies:
@@ -3250,10 +3250,12 @@ __metadata:
     babel-jest: ^29.6.3
     babel-plugin-module-resolver: ^5.0.2
     eslint: ^8.19.0
+    i18next: ^23.11.4
     jest: ^29.6.3
     luxon: ^3.4.4
     prettier: 2.8.8
     react: 18.2.0
+    react-i18next: ^14.1.1
     react-native: 0.74.1
     react-native-context-menu-view: ^1.16.0
     react-native-get-random-values: ^1.11.0
@@ -5732,6 +5734,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"html-parse-stringify@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "html-parse-stringify@npm:3.0.1"
+  dependencies:
+    void-elements: 3.1.0
+  checksum: 334fdebd4b5c355dba8e95284cead6f62bf865a2359da2759b039db58c805646350016d2017875718bc3c4b9bf81a0d11be5ee0cf4774a3a5a7b97cde21cfd67
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.1.1":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
@@ -5776,6 +5787,15 @@ __metadata:
   version: 2.1.0
   resolution: "human-signals@npm:2.1.0"
   checksum: b87fd89fce72391625271454e70f67fe405277415b48bcc0117ca73d31fa23a4241787afdc8d67f5a116cf37258c052f59ea82daffa72364d61351423848e3b8
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^23.11.4":
+  version: 23.11.4
+  resolution: "i18next@npm:23.11.4"
+  dependencies:
+    "@babel/runtime": ^7.23.2
+  checksum: 8682a1c538fdc3309183997c5b5e2df2d1557be70a2d1bd947b2b020d70afb414d55492f9010387729dd9362bf191e15f782cc879023c6a495767334dc3e6320
   languageName: node
   linkType: hard
 
@@ -8433,6 +8453,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-i18next@npm:^14.1.1":
+  version: 14.1.1
+  resolution: "react-i18next@npm:14.1.1"
+  dependencies:
+    "@babel/runtime": ^7.23.9
+    html-parse-stringify: ^3.0.1
+  peerDependencies:
+    i18next: ">= 23.2.3"
+    react: ">= 16.8.0"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: e1a00f82f355c439bc9e98cb8bc6fccbab769fa8f0e5da1545cfb262dc228183615aa89bad91b90db6d8de1949bb54f0c1655aec04c8947daf8383af07b1eff3
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.0.0, react-is@npm:^18.2.0":
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
@@ -8526,7 +8564,7 @@ __metadata:
 
 "react-native-paper@patch:react-native-paper@npm%3A5.12.3#./.yarn/patches/react-native-paper-npm-5.12.3-1a888b7688.patch::locator=TodoHub%40workspace%3A.":
   version: 5.12.3
-  resolution: "react-native-paper@patch:react-native-paper@npm%3A5.12.3#./.yarn/patches/react-native-paper-npm-5.12.3-1a888b7688.patch::version=5.12.3&hash=fea22a&locator=TodoHub%40workspace%3A."
+  resolution: "react-native-paper@patch:react-native-paper@npm%3A5.12.3#./.yarn/patches/react-native-paper-npm-5.12.3-1a888b7688.patch::version=5.12.3&hash=4c6c0b&locator=TodoHub%40workspace%3A."
   dependencies:
     "@callstack/react-theme-provider": ^3.0.9
     color: ^3.1.2
@@ -8536,7 +8574,7 @@ __metadata:
     react-native: "*"
     react-native-safe-area-context: "*"
     react-native-vector-icons: "*"
-  checksum: 13b787a211393c1532d76cec588517d257f4b6298b637b66ebf3d5d318ebe9284f7543d1fbf0fa963349476852d3937cb7a7cafe3cfa6bae13cc71d39d818ef3
+  checksum: 73c059bffc3e15f3cc9664cf5d691a0e45f3900eb2c0a07fa9630da4b175bb15685e147b1465dd275942ea8c164269c707fad100e7897f9d634b20dbb67c3562
   languageName: node
   linkType: hard
 
@@ -10124,6 +10162,13 @@ __metadata:
   version: 1.0.1
   resolution: "vlq@npm:1.0.1"
   checksum: 67ab6dd35c787eaa02c0ff1a869dd07a230db08722fb6014adaaf432634808ddb070765f70958b47997e438c331790cfcf20902411b0d6453f1a2a5923522f55
+  languageName: node
+  linkType: hard
+
+"void-elements@npm:3.1.0":
+  version: 3.1.0
+  resolution: "void-elements@npm:3.1.0"
+  checksum: 0390f818107fa8fce55bb0a5c3f661056001c1d5a2a48c28d582d4d847347c2ab5b7f8272314cac58acf62345126b6b09bea623a185935f6b1c3bbce0dfd7f7f
   languageName: node
   linkType: hard
 
