@@ -17,6 +17,7 @@ import {
   markSubtaskAsDone,
   markSubtaskAsUndone,
   markTaskAsRead,
+  setSelectedTask,
 } from 'src/store/tasks/actions';
 
 type TaskItemProps = {
@@ -55,6 +56,7 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     ) => {
       switch (event.nativeEvent.name) {
         case ActionsNames.Details:
+          dispatch(setSelectedTask(task.id));
           navigate('TaskDetailsScreen');
           break;
 

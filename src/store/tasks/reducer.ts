@@ -4,10 +4,12 @@ import {TasksActionsType} from './types';
 type TasksStateType = {
   tasks: TaskType[];
   isFromSection: boolean;
+  selectedTask: string;
 };
 const initialState: TasksStateType = {
   tasks: [],
   isFromSection: false,
+  selectedTask: '',
 };
 
 export default (
@@ -98,6 +100,44 @@ export default (
           ),
         ],
       };
+
+    case TasksActionsType.ADD_SUBTASKS_TO_TASK:
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map(item =>
+            item.id === action.payload.taskId
+              ? {
+                  ...item,
+                  subTasks: [...item.subTasks, ...action.payload.subtasks],
+                }
+              : item,
+          ),
+        ],
+      };
+
+    case TasksActionsType.DELETE_SUBTASKS:
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks.map(item =>
+            item.id === action.payload.taskId
+              ? {
+                  ...item,
+                  subTasks: [
+                    ...item.subTasks.filter(
+                      subtask =>
+                        !action.payload.subtaskIds.includes(subtask.id),
+                    ),
+                  ],
+                }
+              : item,
+          ),
+        ],
+      };
+
+    case TasksActionsType.SET_SELECTED_TASK:
+      return {...state, selectedTask: action.payload.taskId};
 
     default:
       return state;

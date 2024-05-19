@@ -21,6 +21,7 @@ import {
   deleteSection,
   setSelectedSections,
 } from 'src/store/sections/actions';
+import {deleteTask} from 'src/store/tasks/actions';
 
 const SectionsScreen = () => {
   const theme = useTheme();
@@ -49,6 +50,10 @@ const SectionsScreen = () => {
 
         case ContextActionNames.Delete:
           dispatch(deleteSection(sectionId));
+          tasks.map(
+            (item: TaskType) =>
+              item.sectionId === sectionId && dispatch(deleteTask(item.id)),
+          );
           break;
 
         default:

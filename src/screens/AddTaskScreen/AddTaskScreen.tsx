@@ -68,11 +68,13 @@ const HomeScreen = () => {
   const [showTaskTextError, setShowTaskTextError] = useState<boolean>(false);
 
   const createTask = useCallback(() => {
-    const subTasks = subtasks.map(item => ({
-      title: item.text,
-      id: uuidv4(),
-      isDone: false,
-    }));
+    const subTasks = subtasks
+      .filter(item => item.text)
+      .map(item => ({
+        title: item.text,
+        id: uuidv4(),
+        isDone: false,
+      }));
     dispatch(
       addTask({
         id: uuidv4(),
@@ -140,11 +142,10 @@ const HomeScreen = () => {
               onConfirm={newDate => {
                 if (newDate >= new Date()) {
                   setDate(newDate);
+                  setShowDatePicker(false);
                 } else {
                   setShowDateError(true);
                 }
-                setDate(newDate);
-                setShowDatePicker(false);
               }}
             />
             <Text variant="bodyLarge">Subtasks:</Text>
@@ -199,7 +200,7 @@ const HomeScreen = () => {
               setShowTaskTextError(true);
               return;
             }
-            if (!subtasks[0].text) {
+            if (!subtasks.some(item => item.text)) {
               setShowSubtaskError(true);
               return;
             }
