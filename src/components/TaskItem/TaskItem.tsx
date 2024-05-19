@@ -127,22 +127,18 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     [color],
   );
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
   return (
     <>
       <ContextMenu
         actions={contextProps.contextMenuActions}
         onPress={contextProps.onContextMenuActionPress}>
         <List.Accordion
-          expanded={isExpanded}
           {...contextProps}
           title={task.title}
           {...(isTaskDone && {
             titleStyle: styles.done,
           })}
-          onPress={() => setIsExpanded(prev => !prev)}
-          onLongPress={() => setIsExpanded(false)}
+          style={{backgroundColor: theme.colors.background}}
           left={renderColor}
           description={`${t('taskItem.subTasksLeft.text', {
             left: uncompletedTaskNumber,
@@ -157,7 +153,9 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
                 })
           }`}>
           {task.subTasks.map(item => (
-            <View key={item.id}>
+            <View
+              key={item.id}
+              style={{backgroundColor: theme.colors.background}}>
               <Divider />
               <List.Item
                 title={item.title}
