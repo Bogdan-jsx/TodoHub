@@ -2,7 +2,9 @@ import {Checkbox, Divider, List, useTheme} from 'react-native-paper';
 import React, {useCallback, useMemo, useState} from 'react';
 import {navigate} from 'src/navigation/navigation';
 import {NativeSyntheticEvent, Platform, View} from 'react-native';
-import {ContextMenuOnPressNativeEvent} from 'react-native-context-menu-view';
+import ContextMenu, {
+  ContextMenuOnPressNativeEvent,
+} from 'react-native-context-menu-view';
 import {ActionsNames, CONTEXT_MENU_ACTIONS} from './config';
 import {CheckboxWrapper, ColorIndicator, styles} from './TaskIten.styled';
 import {DateTime} from 'luxon';
@@ -52,7 +54,10 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     new Date().getDate() === new Date(task.dueDate).getDate();
 
   const contextProps = {
-    contextMenuActions: CONTEXT_MENU_ACTIONS.map(item => ({
+    contextMenuActions: CONTEXT_MENU_ACTIONS.filter(
+      item =>
+        !(uncompletedTaskNumber < 1 && item.title === ActionsNames.MarkAsDone),
+    ).map(item => ({
       title: t(item.title),
     })),
     onContextMenuActionPress: (
@@ -80,7 +85,6 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
           break;
       }
     },
-    onCancel: () => setDisableOpen(false),
   };
 
   const renderCheckbox = useCallback(
@@ -123,47 +127,50 @@ const TaskItem: React.FC<TaskItemProps> = ({task}) => {
     [color],
   );
 
-  const [disableOpen, setDisableOpen] = useState<boolean>(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   return (
     <>
-      <List.Accordion
-        {...contextProps}
-        title={task.title}
-        {...(isTaskDone && {
-          titleStyle: styles.done,
-        })}
-        left={renderColor}
-        onLongPress={() => setDisableOpen(true)}
-        {...(disableOpen && {
-          onPress: () => null,
-        })}
-        description={`${t('taskItem.subTasksLeft.text', {
-          left: uncompletedTaskNumber,
-          all: allTasksNumber,
-        })} ${
-          isDueTommorow
-            ? t('taskItem.dueDate.dueToday.text')
-            : t('taskItem.dueDate.text', {
-                date: DateTime.fromJSDate(new Date(task.dueDate)).toFormat(
-                  'dd.MM.yyyy',
-                ),
-              })
-        }`}>
-        {task.subTasks.map(item => (
-          <View key={item.id}>
-            <Divider />
-            <List.Item
-              title={item.title}
-              style={styles.subTask}
-              {...(item.isDone && {
-                titleStyle: styles.done,
-              })}
-              left={() => renderCheckbox(item)}
-            />
-          </View>
-        ))}
-      </List.Accordion>
+      <ContextMenu
+        actions={contextProps.contextMenuActions}
+        onPress={contextProps.onContextMenuActionPress}>
+        <List.Accordion
+          expanded={isExpanded}
+          {...contextProps}
+          title={task.title}
+          {...(isTaskDone && {
+            titleStyle: styles.done,
+          })}
+          onPress={() => setIsExpanded(prev => !prev)}
+          onLongPress={() => setIsExpanded(false)}
+          left={renderColor}
+          description={`${t('taskItem.subTasksLeft.text', {
+            left: uncompletedTaskNumber,
+            all: allTasksNumber,
+          })} ${
+            isDueTommorow
+              ? t('taskItem.dueDate.dueToday.text')
+              : t('taskItem.dueDate.text', {
+                  date: DateTime.fromJSDate(new Date(task.dueDate)).toFormat(
+                    'dd.MM.yyyy',
+                  ),
+                })
+          }`}>
+          {task.subTasks.map(item => (
+            <View key={item.id}>
+              <Divider />
+              <List.Item
+                title={item.title}
+                style={styles.subTask}
+                {...(item.isDone && {
+                  titleStyle: styles.done,
+                })}
+                left={() => renderCheckbox(item)}
+              />
+            </View>
+          ))}
+        </List.Accordion>
+      </ContextMenu>
       <DateTimePickerModal
         date={new Date(task.dueDate)}
         isVisible={showDatePicker}

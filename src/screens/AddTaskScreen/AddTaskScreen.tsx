@@ -150,10 +150,10 @@ const HomeScreen = () => {
               onConfirm={newDate => {
                 if (newDate >= new Date()) {
                   setDate(newDate);
-                  setShowDatePicker(false);
                 } else {
                   setShowDateError(true);
                 }
+                setShowDatePicker(false);
               }}
             />
             <Text variant="bodyLarge">{t('screens.addTask.subtasks')}</Text>
